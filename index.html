@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>controle de tempo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h2 id="relogio"></h2>
+    <script>
+        function AtualizarRelogio(){
+            const agora = new Date();
+            const horas = agora.getHours().toString().padStart(2, '0');
+            const minut = agora.getMinutes().toString().padStart(2, '0');
+            const segun = agora.getSeconds().toString().padStart(2, '0');
+
+            document.getElementById("relogio").innerText = `${horas}:${minut}:${segun}`;
+        }
+
+        setInterval(AtualizarRelogio, 1000);
+        AtualizarRelogio();
+
+    </script>
+    <hr>
+    <h2 id="timer">00:00:00</h2>
+    <div class="botoes">
+        <button onclick="iniciar()" id="btnIniciar">Iniciar</button>
+        <button onclick="pausar()" id="btnPausar">Pausar</button>
+        <button onclick="encerrar()" id="btnEncerrar">Encerrar</button>
+    </div>
+    <script>
+        let segundos = 0;
+        let intervalo;
+
+        function formatar (segundos) {
+            const h = String(Math.floor(segundos/3600)).padStart(2, '0');
+            const m = String(Math.floor((segundos % 3600)/60)).padStart(2, '0');
+            const s = String(segundos % 60).padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }   
+
+        function atualizarTimer() {
+            document.getElementById("timer").innerText = formatar(segundos);
+        }
+
+        function iniciar(){
+            if(!intervalo) {
+                intervalo = setInterval(() => {
+                    segundos++;
+                    atualizarTimer();
+                }, 1000);
+                document.getElementById("btnIniciar").disabled = true;
+                document.getElementById("btnPausar").disabled = false;
+            }
+        }
+
+        function pausar() {
+            if(intervalo) {
+                clearInterval(intervalo);
+                intervalo = null;
+                document.getElementById("btnIniciar").disabled = false;
+                document.getElementById("btnPausar").disabled = true;
+            }
+        }
+
+        function encerrar() {
+            pausar();
+            segundos = 0;
+            atualizarTimer();
+            document.getElementById("btnIniciar").disabled = false;
+            document.getElementById("btnPausar").disabled = false;
+        }
+
+        // Inicializar estado dos botões
+        document.getElementById("btnPausar").disabled = true;
+    </script>
+</body>
+</html>
